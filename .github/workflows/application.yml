@@ -1,5 +1,9 @@
 name: Application Pipeline
 
+permissions:
+  contents: read
+  security-events: write
+
 on:
   push:
     paths:
