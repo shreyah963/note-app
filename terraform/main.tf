@@ -57,9 +57,9 @@ module "eks" {
   subnet_ids      = [module.vpc.private_subnet_id, module.vpc.private_subnet_id_2]
   eks_managed_node_groups = {
     default = {
-      min_size     = 1
-      max_size     = 3
-      desired_size = 2
+      min_size       = 1
+      max_size       = 3
+      desired_size   = 2
       instance_types = ["t3.medium"]
       subnet_ids     = [module.vpc.private_subnet_id, module.vpc.private_subnet_id_2]
       iam_role_additional_policies = {
@@ -72,12 +72,3 @@ module "eks" {
   }
 }
 
-# Cloud Native Security Controls
-module "security" {
-  source = "./modules/security"
-  # Set to true if you have AWS Organizations access
-  create_organization_policy = false
-  # Log retention settings
-  cloudtrail_log_retention_days = 30
-  config_log_retention_days     = 30
-} 
