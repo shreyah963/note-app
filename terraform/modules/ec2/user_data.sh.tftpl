@@ -9,11 +9,71 @@ apt-get install -y mongodb-org
 systemctl start mongod
 systemctl enable mongod
 
+# Wait for MongoDB to start
+sleep 10
+
+# Create some test data for backup
+mongo --eval "
+use wiz_exercise;
+db.notes.insertMany([
+  {title: 'Test Note 1', content: 'This is a test note for backup', created: new Date()},
+  {title: 'Test Note 2', content: 'Another test note for backup', created: new Date()},
+  {title: 'Test Note 3', content: 'Third test note for backup', created: new Date()}
+]);
+db.users.insertOne({name: 'Shreya Bhatta', email: 'shreya@example.com', created: new Date()});
+"
+
 # Set up daily backup to S3 (requires awscli and IAM permissions)
 apt-get install -y awscli
-cat <<EOF > /etc/cron.daily/mongo-backup
+
+# Create improved backup script
+cat <<'EOF' > /usr/local/bin/mongo-backup.sh
 #!/bin/bash
-mongodump --out /tmp/mongodump
-aws s3 cp /tmp/mongodump s3://${s3_bucket}/$(date +\%F) --recursive
+set -e
+
+BACKUP_DIR="/tmp/mongodump"
+S3_BUCKET="wiz-mongo-backup-3ad1c3cf"
+DATE=$(date +%Y-%m-%d_%H-%M-%S)
+BACKUP_NAME="mongodb_backup_$DATE"
+
+echo "Starting MongoDB backup at $(date)"
+
+# Create backup directory
+mkdir -p $BACKUP_DIR
+
+# Perform MongoDB dump
+mongodump --out $BACKUP_DIR/$BACKUP_NAME
+
+# Check if backup was successful
+if [ $? -eq 0 ]; then
+    echo "MongoDB dump completed successfully"
+    
+    # Upload to S3
+    aws s3 cp $BACKUP_DIR/$BACKUP_NAME s3://$S3_BUCKET/$BACKUP_NAME --recursive
+    
+    if [ $? -eq 0 ]; then
+        echo "Backup uploaded to S3 successfully: s3://$S3_BUCKET/$BACKUP_NAME"
+    else
+        echo "Failed to upload backup to S3"
+        exit 1
+    fi
+    
+    # Clean up local backup
+    rm -rf $BACKUP_DIR/$BACKUP_NAME
+else
+    echo "MongoDB dump failed"
+    exit 1
+fi
+
+echo "Backup completed at $(date)"
 EOF
-chmod +x /etc/cron.daily/mongo-backup 
+
+chmod +x /usr/local/bin/mongo-backup.sh
+
+# Add to crontab for daily backup at 2 AM
+(crontab -l 2>/dev/null; echo "0 2 * * * /usr/local/bin/mongo-backup.sh >> /var/log/mongo-backup.log 2>&1") | crontab -
+
+# Run initial backup immediately
+/usr/local/bin/mongo-backup.sh
+
+echo "MongoDB setup and backup configuration completed" 
