@@ -18,6 +18,55 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Validate Terraform Configuration
+        run: |
+          cd terraform
+          terraform validate
+          terraform fmt -check
+
+      - name: Check for Terraform Security Issues
+        uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          working-directory: terraform
+          format: sarif
+          out: tfsec.sarif
+
+      - name: Upload tfsec results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: terraform/tfsec.sarif
+
+      - name: Run Checkov (additional IaC security scan)
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: terraform
+          framework: terraform
+          output_format: sarif
+          output_file_path: checkov_results.sarif
+          soft_fail: true
+
+      - name: Upload Checkov results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: terraform/checkov_results.sarif
+
+      - name: Check for Secrets in Infrastructure Code
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./terraform
+          base: HEAD
+          head: HEAD~1
+
+      - name: Validate AWS IAM Policies
+        run: |
+          cd terraform
+          for file in $(find . -name "*.json" -o -name "*.tf" | grep -E "(policy|iam)"); do
+            echo "Validating IAM policy in $file"
+            if [[ $file == *.json ]]; then
+              aws iam validate-policy-document --policy-document file://$file || echo "Policy validation failed for $file"
+            fi
+          done
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
@@ -41,9 +90,4 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        run: terraform -chdir=terraform apply -auto-approve
-
-      - name: Run tfsec (security scan)
-        uses: aquasecurity/tfsec-action@v1.0.3
-        with:
-          working-directory: terraform 
+        run: terraform -chdir=terraform apply -auto-approve 

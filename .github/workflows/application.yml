@@ -24,6 +24,36 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Run SAST (Static Application Security Testing)
+        uses: github/codeql-action/init@v2
+        with:
+          languages: javascript
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+
+      - name: Scan Dependencies for Vulnerabilities
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+
+      - name: Check for Secrets in Code
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: HEAD
+          head: HEAD~1
+
+      - name: Validate Kubernetes Manifests
+        uses: azure/k8s-manifest-validator@v1
+        with:
+          manifests: |
+            k8s/deployment.yml
+            k8s/service.yml
+            k8s/ingress.yml
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -45,6 +75,14 @@ jobs:
           image-ref: ${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
           format: 'table'
           exit-code: '0'
+
+      - name: Scan Docker image with Snyk
+        uses: snyk/actions/docker@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          image: ${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+          args: --severity-threshold=high
 
       - name: Push Docker image to ECR
         run: |
