@@ -72,3 +72,11 @@ module "eks" {
   }
 }
 
+module "security" {
+  source = "./modules/security"
+  # Optional: override defaults if needed
+  # create_organization_policy      = false
+  # cloudtrail_log_retention_days   = 30
+  # config_log_retention_days       = 30
+}
+
