@@ -71,13 +71,3 @@ module "eks" {
     Name = "wiz-eks"
   }
 }
-
-# Cloud Native Security Controls
-module "security" {
-  source = "./modules/security"
-  # Set to true if you have AWS Organizations access
-  create_organization_policy = false
-  # Log retention settings
-  cloudtrail_log_retention_days = 30
-  config_log_retention_days     = 30
-} 
