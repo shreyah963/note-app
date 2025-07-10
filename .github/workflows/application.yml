@@ -1,0 +1,54 @@
+name: Application Pipeline
+
+on:
+  push:
+    paths:
+      - 'tasky-main/**'
+      - 'k8s/**'
+      - 'Dockerfile'
+      - '.github/workflows/application.yml'
+  pull_request:
+    paths:
+      - 'tasky-main/**'
+      - 'k8s/**'
+      - 'Dockerfile'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: us-east-1
+      ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+      IMAGE_TAG: ${{ github.sha }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build Docker image
+        run: |
+          docker build --platform linux/amd64 -t $ECR_REPOSITORY:$IMAGE_TAG ./tasky-main
+
+      - name: Scan Docker image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+
+      - name: Push Docker image to ECR
+        run: |
+          docker push $ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Update Kubernetes deployment
+        run: |
+          aws eks update-kubeconfig --region $AWS_REGION --name ${{ secrets.EKS_CLUSTER_NAME }}
+          kubectl set image deployment/notes-app notes-app=$ECR_REPOSITORY:$IMAGE_TAG -n notes-app 
