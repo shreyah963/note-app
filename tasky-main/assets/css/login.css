@@ -1,0 +1,197 @@
+body {
+	min-height: 100vh;
+	background: linear-gradient(135deg, #e0e7ff 0%, #a5b4fc 100%);
+	font-family: 'Poppins', sans-serif;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+}
+
+.main {
+	width: 410px;
+	background: linear-gradient(135deg, #f8fafc 60%, #e0e7ff 100%);
+	border-radius: 22px;
+	box-shadow: 0 8px 32px rgba(108,99,255,0.13), 0 1.5px 8px #a5b4fc22;
+	padding: 54px 40px 40px 40px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	border: 2.5px solid #a5b4fc;
+	transition: box-shadow 0.2s;
+}
+.main:hover {
+	box-shadow: 0 16px 48px rgba(108,99,255,0.18), 0 2px 12px #a5b4fc33;
+}
+
+.logo-title {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-bottom: 18px;
+	width: 100%;
+}
+.logo-title h1 {
+	font-size: 2.2rem;
+	font-weight: 900;
+	color: #6c63ff;
+	margin: 0 0 2px 0;
+	letter-spacing: 1.2px;
+}
+.logo-title span {
+	font-size: 1.08rem;
+	color: #a5b4fc;
+	font-weight: 500;
+	margin-bottom: 2px;
+	letter-spacing: 0.5px;
+}
+.logo-title::after {
+	content: '';
+	display: block;
+	width: 60px;
+	height: 3px;
+	background: linear-gradient(90deg, #a5b4fc 0%, #fbc2eb 100%);
+	border-radius: 2px;
+	margin: 18px auto 0 auto;
+}
+
+.logo-img {
+	width: 56px;
+	height: 56px;
+	border-radius: 50%;
+	background: linear-gradient(135deg, #fbc2eb 0%, #a5b4fc 100%);
+	border: 3px solid #a5b4fc;
+	box-shadow: 0 2px 12px #a5b4fc33;
+	margin-bottom: 10px;
+	object-fit: contain;
+	display: block;
+}
+
+.tab-header {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 36px;
+	gap: 0;
+	width: 100%;
+}
+.tab {
+	flex: 1 1 0;
+	background: #f3f8ff;
+	color: #6c63ff;
+	border: none;
+	border-radius: 12px 12px 0 0;
+	padding: 16px 0 14px 0;
+	font-size: 1.15rem;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background 0.25s, color 0.25s, box-shadow 0.25s;
+	border-bottom: 2px solid #e0e7ff;
+	box-shadow: none;
+	letter-spacing: 0.5px;
+	outline: none;
+}
+.tab.active {
+	background: linear-gradient(90deg, #a5b4fc 0%, #fbc2eb 100%);
+	color: #fff;
+	border-bottom: 2.5px solid #a5b4fc;
+	box-shadow: 0 2px 8px rgba(108,99,255,0.07);
+	z-index: 1;
+}
+.tab:focus {
+	outline: 2px solid #a5b4fc;
+}
+
+.signup, .login {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 24px;
+	background: #f8fafc;
+	border-radius: 16px;
+	padding: 40px 24px 32px 24px;
+	margin-bottom: 0;
+	box-shadow: 0 2px 8px rgba(108,99,255,0.04);
+	width: 100%;
+	border: 1.5px solid #e0e7ff;
+}
+
+label[for="login-tab"], label[for="signup-tab"] {
+	color: #6c63ff;
+	font-size: 1.4rem;
+	font-weight: 800;
+	margin-bottom: 18px;
+	letter-spacing: 0.5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+	width: 100%;
+	padding: 16px 18px;
+	border: 1.5px solid #d1d5db;
+	border-radius: 8px;
+	background: #fff;
+	font-size: 1.08rem;
+	outline: none;
+	transition: border 0.2s, box-shadow 0.2s;
+	box-shadow: 0 1px 2px rgba(108,99,255,0.04);
+	margin-bottom: 2px;
+}
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+	border: 1.5px solid #a5b4fc;
+	box-shadow: 0 2px 8px #a5b4fc33;
+}
+
+button[type="button"] {
+	background: linear-gradient(90deg, #a5b4fc 0%, #fbc2eb 100%);
+	color: #fff;
+	border: none;
+	border-radius: 8px;
+	padding: 16px 0;
+	font-size: 1.12rem;
+	font-weight: 800;
+	cursor: pointer;
+	margin-top: 8px;
+	width: 100%;
+	transition: background 0.2s, box-shadow 0.2s;
+	box-shadow: 0 2px 8px #a5b4fc22;
+	letter-spacing: 0.5px;
+	text-shadow: 0 1px 2px #fff8;
+}
+button[type="button"]:hover {
+	background: linear-gradient(90deg, #fbc2eb 0%, #a5b4fc 100%);
+	box-shadow: 0 4px 16px #a5b4fc33;
+}
+
+.error {
+	color: #e57373;
+	font-size: 1rem;
+	margin-bottom: 6px;
+	background: #fff6f6;
+	border-radius: 6px;
+	padding: 6px 0;
+	width: 100%;
+	text-align: center;
+	font-weight: 600;
+	letter-spacing: 0.2px;
+}
+
+@media (max-width: 500px) {
+	.main {
+		width: 98vw;
+		padding: 10vw 2vw;
+	}
+	.signup, .login {
+		width: 100%;
+		padding: 6vw 2vw;
+	}
+	input[type="text"],
+	input[type="email"],
+	input[type="password"] {
+		width: 90vw;
+		max-width: 98%;
+	}
+}
+
