@@ -18,6 +18,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
       - name: Validate Terraform Configuration
         run: |
           cd terraform
@@ -66,9 +69,6 @@ jobs:
               aws iam validate-policy-document --policy-document file://$file || echo "Policy validation failed for $file"
             fi
           done
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2

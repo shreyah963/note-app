@@ -47,12 +47,12 @@ jobs:
           head: HEAD~1
 
       - name: Validate Kubernetes Manifests
-        uses: azure/k8s-manifest-validator@v1
+        uses: instrumenta/kubeval-action@v1.0.0
         with:
-          manifests: |
-            k8s/deployment.yml
-            k8s/service.yml
-            k8s/ingress.yml
+          files: |
+            tasky-main/k8s/deployment.yaml
+            tasky-main/k8s/service.yaml
+            tasky-main/k8s/ingress.yaml
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
