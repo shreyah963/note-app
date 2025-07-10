@@ -9,6 +9,10 @@ on:
     paths:
       - 'terraform/**'
 
+permissions:
+  contents: read
+  security-events: write
+
 jobs:
   terraform:
     runs-on: ubuntu-latest
