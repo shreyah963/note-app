@@ -73,3 +73,62 @@ This is a deliberately vulnerable note-taking application built with Go, Gin, an
 
 ## Warning
 This app is intentionally insecure. Do not deploy it in a real environment.
+
+---
+
+## **1. How the File Gets Into the Image (Dockerfile)**
+
+From your `tasky-main/Dockerfile`:
+```dockerfile
+COPY --from=build /go/src/tasky/assets ./assets
+COPY --from=build /go/src/tasky/wizexercise.txt ./wizexercise.txt
+```
+- This copies the `assets` directory and the `wizexercise.txt` file from the build stage into the final image at `/app/assets` and `/app/wizexercise.txt`.
+
+---
+
+## **2. Validate the File Exists in the Running Container**
+
+### **A. Find a Running Pod**
+
+First, get the name of a running pod for your app:
+```bash
+kubectl get pods -n notes-app
+```
+
+### **B. Exec Into the Pod**
+
+Open a shell inside the pod (replace `<pod-name>` with your pod’s name):
+```bash
+kubectl exec -it <pod-name> -n notes-app -- sh
+```
+- If your image uses Alpine, `sh` will work. If it’s Ubuntu/Debian, use `bash`.
+
+### **C. List the File(s)**
+
+Once inside the container, check for the file:
+```sh
+ls -l /app/wizexercise.txt
+ls -l /app/assets
+cat /app/wizexercise.txt
+```
+- This will show the file and its contents.
+
+### **D. Screenshot/Proof**
+
+- Take a screenshot of the terminal showing the file exists and (optionally) its contents.
+
+---
+
+## **Summary Table**
+
+| Step | Command | What to Show |
+|------|---------|--------------|
+| Show Dockerfile COPY | (see above) | Dockerfile snippet |
+| List pods | `kubectl get pods -n notes-app` | Pod name |
+| Exec into pod | `kubectl exec -it <pod> -n notes-app -- sh` | Shell prompt |
+| List/check file | `ls -l /app/wizexercise.txt`<br>`cat /app/wizexercise.txt` | File exists and contents |
+
+---
+
+**Let me know if you want a ready-to-copy command for your specific pod, or if you want to see how to do this for another file!**
