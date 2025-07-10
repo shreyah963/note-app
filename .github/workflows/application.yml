@@ -47,7 +47,7 @@ jobs:
           head: HEAD~1
 
       - name: Validate Kubernetes Manifests
-        uses: instrumenta/kubeval-action@v1.0.0
+        uses: steebchen/kubeval-action@v1
         with:
           files: |
             tasky-main/k8s/deployment.yaml
