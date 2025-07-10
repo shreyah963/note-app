@@ -37,7 +37,6 @@ jobs:
           path: ./
           base: HEAD
           head: HEAD~1
-        continue-on-error: true
 
       - name: Run Snyk
         uses: snyk/actions/node@master
