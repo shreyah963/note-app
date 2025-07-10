@@ -101,3 +101,5 @@ terraform destroy
 
 **Created by:** Shreya Bhatta  
 **For:** Wiz Technical Exercise v4 
+
+AWS_SECRET_ACCESS_KEY=FAKESECRETKEY1234567890
