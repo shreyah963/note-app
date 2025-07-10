@@ -46,13 +46,17 @@ jobs:
           base: HEAD
           head: HEAD~1
 
+      - name: Install kubeval
+        run: |
+          wget https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
+          tar xf kubeval-linux-amd64.tar.gz
+          sudo mv kubeval /usr/local/bin/
+
       - name: Validate Kubernetes Manifests
-        uses: steebchen/kubeval-action@v1
-        with:
-          files: |
-            tasky-main/k8s/deployment.yaml
-            tasky-main/k8s/service.yaml
-            tasky-main/k8s/ingress.yaml
+        run: |
+          kubeval tasky-main/k8s/deployment.yaml
+          kubeval tasky-main/k8s/service.yaml
+          kubeval tasky-main/k8s/ingress.yaml
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
