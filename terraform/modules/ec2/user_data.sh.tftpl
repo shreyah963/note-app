@@ -1,0 +1,19 @@
+#!/bin/bash
+# Install outdated MongoDB (e.g., 4.2 on Ubuntu 23.04)
+apt-get update
+apt-get install -y wget gnupg
+wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | apt-key add -
+echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.2 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.2.list
+apt-get update
+apt-get install -y mongodb-org
+systemctl start mongod
+systemctl enable mongod
+
+# Set up daily backup to S3 (requires awscli and IAM permissions)
+apt-get install -y awscli
+cat <<EOF > /etc/cron.daily/mongo-backup
+#!/bin/bash
+mongodump --out /tmp/mongodump
+aws s3 cp /tmp/mongodump s3://${s3_bucket}/$(date +\%F) --recursive
+EOF
+chmod +x /etc/cron.daily/mongo-backup 
