@@ -1,6 +1,6 @@
-# Terraform Infrastructure for Wiz Technical Exercise
+# Terraform Infrastructure 
 
-This folder contains the Infrastructure-as-Code (IaC) for deploying the required AWS environment for the Wiz technical exercise.
+This folder contains the Infrastructure-as-Code (IaC) for deploying the required AWS environment 
 
 ## Structure
 
