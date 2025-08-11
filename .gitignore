@@ -8,7 +8,6 @@
 !.gitignore
 !README.md
 !.github/
-!.github/workflows/
 
 # Ignore terraform state and cache files
 terraform/.terraform/
