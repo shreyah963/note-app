@@ -1,4 +1,4 @@
-# Wiz Technical Exercise - Two-Tier Web Application
+# Note-App - Two-Tier Web Application
 
 This repository contains a complete two-tier web application deployment on AWS using modern DevOps practices, Terraform for Infrastructure as Code, and Kubernetes for container orchestration.
 
@@ -13,7 +13,7 @@ This repository contains a complete two-tier web application deployment on AWS u
 ## Project Structure
 
 ```
-wiz-exercise/
+note-app/
 ├── terraform/           # Infrastructure as Code
 ├── tasky-main/         # Go application source code
 ├── .github/workflows/  # CI/CD pipelines
@@ -63,7 +63,7 @@ wiz-exercise/
 
 - Application logs: `kubectl logs -n notes-app deployment/notes-app`
 - Infrastructure logs: Check GitHub Actions
-- Database backups: S3 bucket `wiz-mongo-backup-*`
+- Database backups: S3 bucket `mongo-backup-*`
 
 ## Cleanup
 
@@ -100,6 +100,4 @@ terraform destroy
 ---
 
 **Created by:** Shreya Bhatta  
-**For:** Wiz Technical Exercise v4 
 
-AWS_SECRET_ACCESS_KEY=FAKESECRETKEY1234567890
