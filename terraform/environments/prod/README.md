@@ -1,3 +1,3 @@
 # Prod Environment
  
-Production environment configuration for Wiz exercise. 
+Production environment configuration for prod environment
