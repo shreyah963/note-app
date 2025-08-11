@@ -1,3 +1,3 @@
 # Dev Environment
 
-Development environment configuration for Wiz exercise. 
+Development environment configuration for Dev Environment
