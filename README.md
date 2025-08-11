@@ -76,19 +76,6 @@ terraform destroy
 # Remove from GitHub repo settings
 ```
 
-## Exercise Requirements Met
-
-- Two-tier web application (frontend/database)
-- Containerized application on Kubernetes
-- Outdated MongoDB on EC2
-- Public SSH access to EC2
-- Automated database backups to S3
-- Public-readable S3 bucket
-- Infrastructure as Code (Terraform)
-- CI/CD pipelines (GitHub Actions)
-- Security scanning integration
-- Overly permissive configurations (intentional)
-
 ## Notes
 
 - This is a technical exercise with intentionally vulnerable configurations
