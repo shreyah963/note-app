@@ -1,5 +1,5 @@
-# Note-App - Two-Tier Web Application: v:3.7.0
-notes
+# Note-App - Two-Tier Web Application: v:3.7
+
 
 This repository contains a complete two-tier web application deployment on AWS using modern DevOps practices, Terraform for Infrastructure as Code, and Kubernetes for container orchestration.
 
